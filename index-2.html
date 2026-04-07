@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LitTree — Dorothy E. Prior</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Tenor+Sans&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://sywbcojzffkbedwzxzqe.supabase.co',
+      'sb_publishable_abTNearwL1XkFWp0lzFIgw_HzDtFf7A'
+    )
+  </script>
+  <style>
+    :root {
+      --ink: #1a1409;
+      --parchment: #f5f0e8;
+      --sepia: #8b6914;
+      --sepia-light: #c4a24a;
+      --sepia-pale: #ede3cc;
+      --rust: #7a3520;
+      --cream: #faf7f1;
+      --line: #d4c89a;
+      --text: #2d2416;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--ink);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Tenor Sans', sans-serif;
+      color: var(--sepia-light);
+      font-size: 1.25rem;
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Tenor Sans', sans-serif;
+      color: var(--parchment);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .nav-links a:hover { opacity: 1; }
+
+    /* ── PAGES ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── PROFILE PAGE ── */
+    .profile-layout {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 0 4rem;
+    }
+
+    /* Banner */
+    .profile-banner {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      object-position: center 30%;
+      display: block;
+    }
+
+    /* Author header */
+    .author-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 1.5rem;
+      padding: 0 2rem;
+      margin-top: -48px;
+      margin-bottom: 1.5rem;
+    }
+
+    .author-portrait {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--cream);
+      flex-shrink: 0;
+    }
+
+    .author-name-block {
+      padding-bottom: 0.5rem;
+    }
+
+    .author-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+
+    .author-role {
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      margin-top: 0.25rem;
+    }
+
+    /* Bio */
+    .bio-section {
+      padding: 0 2rem 1.5rem;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 1.5rem;
+    }
+
+    .bio-location {
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      margin-bottom: 0.75rem;
+    }
+
+    .bio-text {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text);
+      max-width: 680px;
+    }
+
+    /* Mood tags */
+    .tags-section {
+      padding: 0 2rem 1.5rem;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 2rem;
+    }
+
+    .tags-label {
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      margin-bottom: 0.6rem;
+    }
+
+    .tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      color: var(--sepia);
+      background: transparent;
+    }
+
+    /* Works */
+    .works-heading {
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      padding: 0 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+      padding: 0 2rem;
+    }
+
+    .work-card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 1.25rem;
+      background: white;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .work-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+
+    .work-card.placeholder {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .work-card.placeholder:hover {
+      box-shadow: none;
+      transform: none;
+    }
+
+    .work-type {
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      margin-bottom: 0.5rem;
+    }
+
+    .work-title {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .work-excerpt {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #5a4e3a;
+    }
+
+    .work-tags {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .work-tag {
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      color: var(--sepia);
+    }
+
+    /* ── READING PAGE ── */
+    #reading-page {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    .reading-back {
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 3rem;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .reading-back:hover { opacity: 1; }
+
+    .reading-eyebrow {
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      margin-bottom: 0.75rem;
+    }
+
+    h1.reading-title {
+      font-size: 2.4rem;
+      font-weight: 500;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    .reading-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .reading-author-mini {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+    }
+
+    .reading-author-mini img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .reading-author-mini span {
+      font-size: 0.9rem;
+      color: var(--sepia);
+    }
+
+    .reading-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .reading-body {
+      font-size: 1.15rem;
+      line-height: 1.85;
+      color: var(--text);
+    }
+
+    .reading-body p {
+      margin-bottom: 1.5rem;
+    }
+
+    .reading-body em {
+      font-style: italic;
+    }
+
+    .reading-image {
+      width: 60%;
+      max-width: 380px;
+      margin: 1.5rem auto;
+      border-radius: 4px;
+      display: block;
+    }
+
+    /* ── LULU BUTTON ── */
+    .lulu-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 3rem;
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.9rem 2rem;
+      border: 1px solid var(--sepia-light);
+      color: var(--sepia-light);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .lulu-btn:hover {
+      background: var(--sepia);
+      border-color: var(--sepia);
+      color: var(--cream);
+    }
+
+    /* ── PROFILE BANNER ── */
+    .lulu-banner {
+      flex-direction: column;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-logo" onclick="showPage('profile')">LitTree</span>
+    <ul class="nav-links">
+      <li><a href="#">Poets</a></li>
+      <li><a href="#">Browse</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- ══ PROFILE PAGE ══ -->
+  <div id="profile-page" class="page active">
+    <div class="profile-layout">
+
+      <img
+        class="profile-banner"
+        src="https://sywbcojzffkbedwzxzqe.supabase.co/storage/v1/object/public/story-images/Dorothy_Banner_ArtWork.jpeg"
+        alt="Ancestral portrait collage banner"
+        onerror="this.style.background='#2d2416';this.style.height='220px'"
+      >
+
+      <div class="author-header">
+        <img
+          class="author-portrait"
+          src="https://sywbcojzffkbedwzxzqe.supabase.co/storage/v1/object/public/story-images/PHOTO20260330152904.jpg"
+          alt="Dorothy E. Prior"
+          onerror="this.style.background='#8b6914'"
+        >
+        <div class="author-name-block">
+          <div class="author-name">Dorothy E. Prior</div>
+          <div class="author-role">Writer · Poet</div>
+        </div>
+      </div>
+
+      <div class="bio-section">
+        <div class="bio-location">Based in Gibraltar</div>
+        <p class="bio-text">An eighty-six-year-old Gibraltarian writer, I draw on a lifelong immersion in Psychosynthesis, psychology, and reflective practice to explore how we become who we are. My grandparents' steady wartime care in England, an often-chaotic family life, and decades of inner work shape my poems, musings, and essays on love, conscience, ageing, and the quiet courage of ordinary days. I write to hold truth and kindness together, and to invite readers into a light-hearted yet uncompromising look at what it means to be fully human.</p>
+      </div>
+
+      <div class="tags-section">
+        <div class="tags-label">Moods &amp; Genres</div>
+        <div class="tags-list">
+          <span class="tag">memoir</span>
+          <span class="tag">wartime</span>
+          <span class="tag">reflective</span>
+          <span class="tag">ageing</span>
+          <span class="tag">Gibraltar</span>
+          <span class="tag">family</span>
+          <span class="tag">psychology</span>
+          <span class="tag">quiet courage</span>
+        </div>
+      </div>
+
+      <div class="works-heading">Writing</div>
+      <div class="works-grid">
+
+        <div class="work-card" onclick="showPage('reading')">
+          <div class="work-type">Memoir · Prose</div>
+          <div class="work-title">Elephants in the Sky</div>
+          <div class="work-excerpt">"By the time I became fully conscious — around three — I woke up to life knowing I was a biologist."</div>
+          <div class="work-tags">
+            <span class="work-tag">childhood</span>
+            <span class="work-tag">wartime London</span>
+            <span class="work-tag">wonder</span>
+            <span class="work-tag">memoir</span>
+          </div>
+        </div>
+
+        <div class="work-card placeholder">
+          <div class="work-type">Coming soon</div>
+          <div class="work-title">Untitled II</div>
+          <div class="work-excerpt">A second piece will appear here.</div>
+        </div>
+
+        <div class="work-card placeholder">
+          <div class="work-type">Coming soon</div>
+          <div class="work-title">Untitled III</div>
+          <div class="work-excerpt">A third piece will appear here.</div>
+        </div>
+
+        <div class="work-card placeholder">
+          <div class="work-type">Coming soon</div>
+          <div class="work-title">Untitled IV</div>
+          <div class="work-excerpt">A fourth piece will appear here.</div>
+        </div>
+
+        <div class="work-card placeholder">
+          <div class="work-type">Coming soon</div>
+          <div class="work-title">Untitled V</div>
+          <div class="work-excerpt">A fifth piece will appear here.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ READING PAGE ══ -->
+  <div id="reading-page" class="page">
+    <div style="max-width:680px;margin:0 auto;padding:3rem 2rem 6rem;">
+
+      <div class="reading-back" onclick="showPage('profile')">← Back to Dorothy's Profile</div>
+
+      <div class="reading-eyebrow">Memoir · Prose</div>
+      <h1 class="reading-title">Elephants in the Sky</h1>
+
+      <div class="reading-meta">
+        <div class="reading-author-mini" onclick="showPage('profile')">
+          <img
+            src="https://sywbcojzffkbedwzxzqe.supabase.co/storage/v1/object/public/story-images/PHOTO20260330152904.jpg"
+            alt="Dorothy E. Prior"
+            onerror="this.style.background='#8b6914'"
+          >
+          <span>Dorothy E. Prior</span>
+        </div>
+        <div class="reading-tags">
+          <span class="work-tag">childhood</span>
+          <span class="work-tag">wartime</span>
+          <span class="work-tag">wonder</span>
+        </div>
+      </div>
+
+      <div class="reading-body">
+
+        <p>By the time I became fully conscious — around three — I woke up to life knowing I was a biologist. Or maybe a zoologist — or something like that.</p>
+
+        <p>I hadn't yet registered such words of course: my schooling so far had been conducted by my beloved Grampa as I sat on the top stair of our house in Harrow. He taught me to say the alphabet backwards, to whistle inwards, and to sing a verse or two of "Old Uncle Tom Cobbley and All". I played on his drawing-board with mercury salvaged from old thermometers. I made wigwams on his bed, with his 'Moo-Cow' stick (it had a 'Crumpled Horn') and two other walking-sticks, and his bedsheet. I sat in that, and he told me things I didn't yet know.</p>
+
+        <p>Occasionally I was taken into central London. I suppose it was for the adults to go shopping. I have a memory of being there with Granny Mina and Uncle Tom, the only one of her three sons to have been able to come to England with us because of his work as a ships' Radio Officer. His two brothers — my father and Johnny's father — were Port Pilots back home in Gibraltar, and because of the vital importance of their work during the war, they were not allowed to leave the Rock. Not even to visit us.</p>
+
+        <p>It was Wartime in England — 1943 — and there were elephants in the sky.</p>
+
+        <p>On this particular visit to London I remember that Granny was wearing her fascinating three-cornered hat. Like Dick Turpin. Or like the Corregidor in <em>El Sombrero de Tres Picos</em>. Since I was as yet illiterate, I 'read' London through the images on posters pasted up on the protected and covered-up monuments. I remember asking about the "Squander Bug" image. I didn't like it; wouldn't have liked it in my bed.</p>
+
+        <img
+          src="https://sywbcojzffkbedwzxzqe.supabase.co/storage/v1/object/public/Story-images/Granny%20Mina%20Hat.png"
+          alt="Granny Mina in London wearing her three-cornered hat"
+          class="reading-image"
+        >
+
+        <p>Perhaps that was also the day I first saw the grey 'elephants' in the sky. I recognised them, so I must already have visited a zoo at some point. But so odd: sometimes they seemed to have a trunk, but no legs; sometimes they had three ears… So difficult to work it all out! The main elephant-y things were the grey colour, the corpulence, and the ears.</p>
+
+        <p>They were the barrage balloons, set up to hinder enemy aircraft.</p>
+
+        <img
+          src="https://sywbcojzffkbedwzxzqe.supabase.co/storage/v1/object/public/Story-images/Elephant%20Balloon.png"
+          alt="A barrage balloon over wartime London"
+          class="reading-image"
+        >
+
+        <p>In London I also experienced buses and trams. Trams had long things at the top like grass-hoppers, and they reached up to overhead cables that somehow made the tram move. It also rode on rails, a bit like a train. I liked going on trams.</p>
+
+        <p>In my mind Gibraltar was far, far away, somewhere in dreamland; a place where my indeterminate, ambiguous and nebulous 'father' was. I was eight months old when he last saw me. Though once, at night with my mother in the garden, she pointed out to me that the moon we could see could also be seen by my father in that other place called Gib. I didn't really know what 'my father' or 'Gib' meant. So hard to work out!</p>
+
+        <p>When I couldn't work things out I sometimes asked, "Why?" — which was really a catch-all question, meaning anything from: "How does that connect to my information database?" to "What is it and what does it do?" to the almost biblical: "Why is he or she of interest?" Sometimes, if I couldn't work things out, or I didn't receive an answer that satisfied me, I just put it on the back shelf and remained wondering.</p>
+
+        <p>My third memorable early foray into biology was on an occasion when I cut my knee. Blood came out of the small cut. It wasn't because of shock, or pain, or even fears that "all the blood might come out" that made me panic hysterically: it was the thought that "The germ(an)s might get in!"</p>
+
+        <img
+          src="https://sywbcojzffkbedwzxzqe.supabase.co/storage/v1/object/public/Story-images/Beat%20em%20poster.png"
+          alt="We Beat Em Before — wartime propaganda poster"
+          class="reading-image"
+        >
+
+        <p>I clearly needed a few more years of biological (or zoological, or scientific) study.</p>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showPage(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(name + '-page').classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>
